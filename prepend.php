@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('PRC');
 if (function_exists('php_sapi_name') && php_sapi_name() != 'cli' && extension_loaded('xhprof')) {
 
     if (!function_exists('__xhprof_getallheaders'))
@@ -18,13 +19,13 @@ if (function_exists('php_sapi_name') && php_sapi_name() != 'cli' && extension_lo
     }
 
     if (!function_exists('fastcgi_finish_request')) {
-        function fastcgi_finish_request() {};
+        function fastcgi_finish_request() {echo 0000000;};
     }
 
     if (!function_exists('__xhprof_url_is_hit')) {
         function __xhprof_url_is_hit($pattern, $value)
         {
-            return (bool) preg_match($pattern, $value);
+	    return !(strpos($value, str_replace('@', '', $pattern)) === false);
         }
     }
 
@@ -69,9 +70,10 @@ if (function_exists('php_sapi_name') && php_sapi_name() != 'cli' && extension_lo
                     xhprof_enable();
                     $app_name = $cfg['name'];
                     register_shutdown_function(function() use ($app_name) {
-                        if (function_exists('fastcgi_finish_request')) {
+			if (function_exists('fastcgi_finish_request')) {
                             fastcgi_finish_request();
                         }
+
                         !defined('DS') && define('DS', DIRECTORY_SEPARATOR);
                         $inc_file = __DIR__ . DS . 'xhprof_lib'. DS . 'utils' . DS . 'xhprof_runs.php';
                         if (!file_exists($inc_file)) {
@@ -79,7 +81,7 @@ if (function_exists('php_sapi_name') && php_sapi_name() != 'cli' && extension_lo
                         }
                         require $inc_file;
                         $GLOBALS['xhprof_vars']['data'] = xhprof_disable();
-                        $runs = new XHProfRuns_Default();
+                        $runs = new \XHProfRuns_Default();
                         $runs->save_run($GLOBALS['xhprof_vars'], $app_name);
                     });
                 }

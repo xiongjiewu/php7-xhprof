@@ -30,7 +30,6 @@
  * @author Kannan
  */
 
-if (!interface_exists('iXHProfRuns')) {
     interface iXHProfRuns {
 
         /**
@@ -55,7 +54,6 @@ if (!interface_exists('iXHProfRuns')) {
          *
          */
         public function save_run($xhprof_data, $type, $run_id = null);
-    }
 }
 
 
@@ -69,7 +67,6 @@ if (!interface_exists('iXHProfRuns')) {
  * @author Kannan
  */
 
-if (!class_exists('XHProfRuns_Default')) {
     class XHProfRuns_Default implements iXHProfRuns {
 
         private $dir = '';
@@ -194,5 +191,4 @@ if (!class_exists('XHProfRuns_Default')) {
                 echo "</ul>\n";
             }
         }
-    }
 }
